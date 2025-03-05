@@ -1,5 +1,9 @@
 pipeline{
     agent any
+    environment{
+        AWS_REGION = 'us-east-1'
+        ECR_REPO = ' 414935052400.dkr.ecr.us-east-1.amazonaws.com/jenkins-ci'
+    }
     stages{
         stage('CodeScan'){
             steps{
@@ -21,13 +25,13 @@ pipeline{
     }
         stage('imagetag'){
             steps{
-                sh 'docker tag jenkins-ci:latest:${BUILD_NUMBER} \
-                414935052400.dkr.ecr.us-east-1.amazonaws.com/jenkins-ci:latest:${BUILD_NUMBER}'
+                sh "docker tag jenkins-ci:latest \
+                $ECR_REPO:latest"
             }
         }
         stage ('pushimage'){
             steps{
-                sh 'docker push 414935052400.dkr.ecr.us-east-1.amazonaws.com/jenkins-ci:latest:${BUILD_NUMBER}'
+                sh "docker push $ECR_REPO:latest"
         }
     }
 
